@@ -47,16 +47,12 @@ options:
 There is a public image on Docker Hub: [marcelbruckner/wikipedia-to-markdown](https://hub.docker.com/repository/docker/marcelbruckner/wikipedia-to-markdown). Run it via:
 
 ```bash
-docker run \
-         --volume ./docker:/output \  
-         wikipedia-to-markdown \
-         "topic"
-         <options>
+docker run --volume ./docker:/output wikipedia-to-markdown "topic" <options>
 ```
 
 ## Output
 
-The output is a Markdown file with the same name as the topic name under the newly created directory named after the topic. Images will be placed inside `output/topic/images/`.
+The output is a Markdown file with the same name as the topic name under the newly created directory named after the topic: `output/topic/topic.md`. Images will be placed inside `output/topic/images/`.
 
 ## License
 
