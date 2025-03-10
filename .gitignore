@@ -1,3 +1,10 @@
 .venv
 md_output/
 .vscode
+
+**.svg
+**.md
+**.gif
+**.png
+**.jpg
+**.jpeg

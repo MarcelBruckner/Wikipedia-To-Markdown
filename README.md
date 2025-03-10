@@ -36,9 +36,7 @@ options:
 
 ## Docker Image
 
-There is a public image on Docker Hub: [marcelbruckner/wikipedia-to-markdown](https://hub.docker.com/repository/docker/marcelbruckner/wikipedia-to-markdown).
-
-Run it via:
+There is a public image on Docker Hub: [marcelbruckner/wikipedia-to-markdown](https://hub.docker.com/repository/docker/marcelbruckner/wikipedia-to-markdown). Run it via:
 
 ```bash
 docker run \
