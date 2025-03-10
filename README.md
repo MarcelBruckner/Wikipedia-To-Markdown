@@ -8,8 +8,7 @@ I wanted to convert some Wikipedia articles to Markdown for my personal notes. I
 
 I drew some inspiration from [erictherobot/wikipedia-markdown-generator](https://github.com/erictherobot/wikipedia-markdown-generator) but ended up rewriting it completely. 
 
-> **note** 
-> I especially took the time to **properly format math expressions** to be compatible with markdown.
+I especially took the time to **properly format math expressions to be compatible with markdown**.
 
 ## Prerequisites
 
