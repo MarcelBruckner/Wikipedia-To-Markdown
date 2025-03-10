@@ -15,9 +15,11 @@ I especially took the time to **properly format math expressions to be compatibl
 ## Installation
 
 ```bash
-git clone
-cd wikipedia-markdown-generator
-pip3 install -r requirements.txt
+git clone git@github.com:MarcelBruckner/Wikipedia-To-Markdown.git
+cd Wikipedia-To-Markdown
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
 ```
 
 ## Usage
