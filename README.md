@@ -59,11 +59,6 @@ docker run \
 
 The output is a Markdown file with the same name as the topic name under the newly created directory named after the topic. Images will be placed inside `output/topic/images/`.
 
-## Fork from [erictherobot](https://github.com/erictherobot)
-I'm very thankful for the initial pointers by [erictherobot](https://github.com/erictherobot).
-I started this project with the code provided by [erictherobot](https://github.com/erictherobot) in [erictherobot/wikipedia-markdown-generator](https://github.com/erictherobot/wikipedia-markdown-generator). 
-On my way I decided to do a full rewrite and to only keep some very small parts.
-
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

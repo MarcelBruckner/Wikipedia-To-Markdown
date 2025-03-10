@@ -317,16 +317,9 @@ def wikipedia_to_markdown(topic: str, download_images: bool, languages: list[str
         - If the page is not found, an error message is displayed.
         - The function prioritizes searching in the provided languages order.
     """
-    try:
-        wikipedia_page = wikipedia.page(title=topic)
-        wikipediaapi_page = get_page_for_topic(topic, languages)
-    except wikipedia.exceptions.DisambiguationError as e:
-        print(e.options)
-        return None
-    except wikipedia.exceptions.PageError:
-        print(f"Page not found for the topic: {topic}")
-        return None
-
+    wikipedia_page = wikipedia.page(title=topic)
+    wikipediaapi_page = get_page_for_topic(topic, languages)
+   
     markdown_text: str = heading(url(topic, wikipedia_page.url), 1)
 
     markdown_text += heading("Summary", 2)
@@ -447,6 +440,9 @@ if __name__ == '__main__':
     languages = args.languages.split(",")
     output_path = args.output
 
-    markdown_text, images = wikipedia_to_markdown(topic, download_images, languages)
-    filename = write_page(output_path, topic, markdown_text, images, download_images)
-    print("Written markdown to " + filename)
+    try:
+        markdown_text, images = wikipedia_to_markdown(topic, download_images, languages)
+        filename = write_page(output_path, topic, markdown_text, images, download_images)
+        print("Written markdown to " + filename)
+    except Exception as e:
+        print("Cannot download topic " + topic + " - " + str(e))
