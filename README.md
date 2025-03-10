@@ -2,6 +2,15 @@
 
 This is a simple script to convert a Wikipedia article to Markdown.
 
+## Why?
+
+I wanted to convert some Wikipedia articles to Markdown for my personal notes. I couldn't find a simple script to do this, so I wrote one myself.
+
+I drew some inspiration from [erictherobot/wikipedia-markdown-generator](https://github.com/erictherobot/wikipedia-markdown-generator) but ended up rewriting it completely. 
+
+> **note** 
+> I especially took the time to **properly format math expressions** to be compatible with markdown.
+
 ## Prerequisites
 
 - Python 3
@@ -49,10 +58,6 @@ docker run \
 ## Output
 
 The output is a Markdown file with the same name as the topic name under the newly created directory named after the topic. Images will be placed inside `output/topic/images/`.
-
-## Why?
-
-I wanted to convert some Wikipedia articles to Markdown for my personal notes. I couldn't find a simple script to do this, so I wrote one myself.
 
 ## Fork from [erictherobot](https://github.com/erictherobot)
 I'm very thankful for the initial pointers by [erictherobot](https://github.com/erictherobot).
