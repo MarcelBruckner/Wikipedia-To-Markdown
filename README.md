@@ -4,10 +4,8 @@ This is a simple script to convert a Wikipedia article to Markdown.
 
 ## Why?
 
-I wanted to convert some Wikipedia articles to Markdown for my personal notes. I couldn't find a simple script to do this, so I wrote one myself.
-
+I wanted to convert some Wikipedia articles to Markdown for my personal notes. I couldn't find a simple script to do this, so I wrote one myself. 
 I drew some inspiration from [erictherobot/wikipedia-markdown-generator](https://github.com/erictherobot/wikipedia-markdown-generator) but ended up rewriting it completely. 
-
 I especially took the time to **properly format math expressions to be compatible with markdown**.
 
 ## Prerequisites
