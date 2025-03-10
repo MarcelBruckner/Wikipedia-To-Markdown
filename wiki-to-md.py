@@ -1,10 +1,12 @@
 import os
+import pathlib
 import wikipedia
 import argparse
 import requests
 import urllib.parse
 import wikipediaapi
 import concurrent.futures
+from argparse import RawTextHelpFormatter
 
 def url(text: str, link: str) -> str:
     """
@@ -178,14 +180,13 @@ def convert_displaystyle(displaystyle: str) -> str:
         - The function assumes that the input starts with `\\displaystyle` and removes it before formatting.
         - The output format depends on the style of the mathematical expression.
     """
-    markdown = displaystyle.strip()
+    markdown = displaystyle.replace("\\displaystyle", "").strip()
+    markdown = markdown[1:-1]
+    markdown = markdown + " "
+    markdown = markdown.replace("\\ ", " ")
 
     symbol = "$"
-
-    markdown = symbol + markdown[1:]
-    markdown = markdown[:-1] + symbol
-
-    return markdown
+    return symbol + markdown.strip() + symbol
 
 def sanitize_text(text: str) -> str:
     """
@@ -219,10 +220,17 @@ def sanitize_text(text: str) -> str:
             del lines[start_index]
 
         lines.insert(start_index, convert_displaystyle(displaystyle))
-        print("")
         
     result = "\n".join(lines)
-    result = result.replace(".", ".\n")
+    result = result.replace(".\n", ".\n\n")
+    result = result.replace("\n$", "$")
+    result = result.replace("$\n", "$")
+    result = result.replace("$$", "$\n$")
+    result = "\n".join(line.strip() for line in result.split("\n"))
+
+    for i in range(1, 5):
+        result = result.replace(" " * i, " ") 
+
     return result
 
 def get_page_for_topic(topic: str, languages: list[str]) -> wikipediaapi.WikipediaPage:
@@ -288,7 +296,7 @@ def replace_links(markdown_text: str, links: wikipediaapi.PagesDict) -> str:
 
     return result
 
-def generate_markdown(topic: str, download_images: bool, languages: list[str]) -> str | None:
+def wikipedia_to_markdown(topic: str, download_images: bool, languages: list[str]) -> str | None:
     """
     Generates a Markdown file for a given Wikipedia topic.
  
@@ -324,7 +332,8 @@ def generate_markdown(topic: str, download_images: bool, languages: list[str]) -
     markdown_text += heading("Summary", 2)
     markdown_text += sanitize_text(wikipediaapi_page.summary) + "\n\n"
     
-    markdown_text += section(list(section for section in wikipediaapi_page.sections if section not in ["See also", "References", "Further reading"]))
+    sections = list(section for section in wikipediaapi_page.sections if section.title not in ["See also", "References"])
+    markdown_text += section(sections)
 
     markdown_text += heading("References", 2)
     markdown_text += "\n".join(f'- {x}' for x in wikipedia_page.references)
@@ -335,13 +344,9 @@ def generate_markdown(topic: str, download_images: bool, languages: list[str]) -
     markdown_text += "\n\n"
 
     markdown_text = replace_links(markdown_text, wikipediaapi_page.links)
+    return markdown_text, wikipedia_page.images
 
-    filename = write_page(topic, markdown_text, wikipedia_page.images, download_images)
-
-    print(f"Markdown file created: {filename}")
-    return filename
-
-def write_page(topic: str, markdown_text: str, images: list[str], download_images: bool) -> str:
+def write_page(output_path: str, topic: str, markdown_text: str, images: list[str], download_images: bool) -> str:
     """
     Writes the generated Markdown content to a file and optionally downloads images.
 
@@ -363,10 +368,10 @@ def write_page(topic: str, markdown_text: str, images: list[str], download_image
         - The function ensures that necessary directories exist before saving images.
         - Each downloaded image is referenced in the Markdown file.
     """
-    output_directory = ""
+    output_directory = pathlib.Path(output_path)
     if download_images:
         # Create a directory for markdown files
-        output_directory = topic
+        output_directory = pathlib.Path(output_directory, topic)
         os.makedirs(output_directory, exist_ok=True)
         # Create a directory for image files
         image_directory = os.path.join(output_directory, "images")
@@ -406,7 +411,8 @@ def parser() -> argparse.ArgumentParser:
         - The `--languages` argument specifies the languages in which to look for the topic.
     """
     parser = argparse.ArgumentParser(
-        description="Generate a markdown file for a provided topic."
+        description="Generate a markdown file for a provided topic.",
+        formatter_class=RawTextHelpFormatter
     )
     parser.add_argument(
         "topic",
@@ -414,23 +420,33 @@ def parser() -> argparse.ArgumentParser:
         help="The topic to generate a markdown file for.",
     )
     parser.add_argument(
-        "--download-images",
-        choices=['yes', 'no'],
-        default='yes',
-        help="Specify whether to download images (yes or no).",
+        "--download_images",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Specify whether to not download images.\nDefault: True",
     )
     parser.add_argument(
         "--languages",
         type=str,
         default='de,en',
-        help="Specify the languages to look for the topic.",
+        help="Specify the languages to look for the topic.\nDefault: de,en",
+    )
+    parser.add_argument(
+        "--output",
+        type=str,
+        default='/output',
+        help="The output path for the markdown and images.\nDefault: /output",
     )
     return parser
 
-args = parser().parse_args()
+if __name__ == '__main__':
+    args = parser().parse_args()
 
-topic = args.topic
-download_images = args.download_images == 'yes'
-languages = args.languages.split(",")
+    topic = args.topic
+    download_images = args.download_images
+    languages = args.languages.split(",")
+    output_path = args.output
 
-generate_markdown(topic, download_images, languages)
+    markdown_text, images = wikipedia_to_markdown(topic, download_images, languages)
+    filename = write_page(output_path, topic, markdown_text, images, download_images)
+    print("Written markdown to " + filename)

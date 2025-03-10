@@ -17,33 +17,40 @@ pip3 install -r requirements.txt
 ## Usage
 
 ```bash
-python3 wiki-to-md.py <topic_name>
+Generate a markdown file for a provided topic.
+
+positional arguments:
+  topic                 The topic to generate a markdown file for.
+
+options:
+  -h, --help            show this help message and exit
+  --download_images, --no-download_images
+                        Specify whether to not download images.
+                        Default: True
+  --languages LANGUAGES
+                        Specify the languages to look for the topic.
+                        Default: de,en
+  --output OUTPUT       The output path for the markdown and images.
+                        Default: /output
 ```
 
-Specifying if you want to download the images is optional. It is set to `yes` 
-by default, you can set it to `no`.
+## Docker Image
+
+There is a public image on Docker Hub: [marcelbruckner/wikipedia-to-markdown](https://hub.docker.com/repository/docker/marcelbruckner/wikipedia-to-markdown).
+
+Run it via:
 
 ```bash
-python3 wiki-to-md.py --download-images=no <topic_name>
-```
-
-Optional comma seperated list of languages. 
-The topic is searched for in order of the given languages.
-The default is `["de", "en"]`.
-
-```bash
-python3 wiki-to-md.py -- <topic_name>
-```
-
-For help:
-
-```bash
-python3 wiki-to-md.py --help
+docker run \
+         --volume ./docker:/output \  
+         wikipedia-to-markdown \
+         "topic"
+         <options>
 ```
 
 ## Output
 
-The output is a Markdown file with the same name as the topic name under the newly created directory named after the topic. Images will be placed inside `topic/images/`.
+The output is a Markdown file with the same name as the topic name under the newly created directory named after the topic. Images will be placed inside `output/topic/images/`.
 
 ## Why?
 
